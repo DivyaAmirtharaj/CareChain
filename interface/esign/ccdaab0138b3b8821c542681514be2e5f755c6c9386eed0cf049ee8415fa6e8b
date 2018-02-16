@@ -1,0 +1,20 @@
+{
+    "patient_name": "Jason Binder",
+    "patient_dob": "01-01-1996",
+    "provider_name": "Dean Physician",
+    "encounter_date": "12-30-2017",
+    "encounters": [
+        {
+            "Line_number": "1",
+            "Encounter": "Testing Blockchain"
+        },
+        {
+            "Line_number": "2",
+            "Encounter": "Vitals: Pulse-0.00 Weight-0.00"
+        },
+        {
+            "Line_number": "3",
+            "Encounter": "Symptoms:Insomnia, had Cataract Surgery, Ringing in Ears, sinusitis, poor circulation, cardiac catheterization, shortness of breath 2, lung cancer, ulcerative colitis, divirticulitis surgery, gall stones, bladder cancer, kidney transplant, pemphigus, broken bones, herniated disc, cushing syndrom, "
+        }
+    ]
+}

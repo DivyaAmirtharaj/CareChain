@@ -1,0 +1,16 @@
+{
+    "patient_name": "Jason Binder",
+    "patient_dob": "01-01-1996",
+    "provider_name": "Dean Physician",
+    "encounter_date": "12-29-2017",
+    "encounters": [
+        {
+            "Line_number": "1",
+            "Encounter": "Testing again, but different day"
+        },
+        {
+            "Line_number": "2",
+            "Encounter": "Vitals: Blood Pressure-54\/123 Pulse-72.00 Weight-0.00"
+        }
+    ]
+}

@@ -1,0 +1,221 @@
+<style>
+table.maintable {
+    border:solid 5px #393837;
+    border-collapse:collapse;
+	font-weight: bold;
+    font-size:20px;
+    font-family:Arial, Verdana, Tahoma, Helvetica, sans-serif;
+    text-decoration:none;
+    color:#0018ff; 
+}
+
+table.main subtable{
+    font-size:14px;
+	
+}
+
+table.maintable th {
+  background-color:#4B4B4B;
+  vertical-align: top
+}
+
+table.maintable tr {
+vertical-align: top;
+}
+
+.elapsed_time {
+    color: blue;
+    font-size: 12px;
+    background:rgba(0,0,0,0);
+    border:none;
+	disabled:true;
+	readonly:true;
+	text-align:right;
+} 
+
+</style>
+
+<html>
+<head>
+<title>Public/Private-Key Encryption Demo</title>
+
+
+<script language="JavaScript" type="text/javascript" src="jsbn.js"></script>
+        <script language="JavaScript" type="text/javascript" src="random.js"></script>
+        <script language="JavaScript" type="text/javascript" src="hash.js"></script>
+        <script language="JavaScript" type="text/javascript" src="rsa.js"></script>
+        <script language="JavaScript" type="text/javascript" src="aes.js"></script>
+        <script language="JavaScript" type="text/javascript" src="api.js"></script>
+<script>
+function clear() {
+	document.gen_form.public_key.value ="";
+	document.gen_form.private_key.value= "";
+	document.myform.input.value="";
+	document.myform.encrypt_key.value = "";
+	document.myform.crypted.value="";
+}
+function microtime (getAsFloat) {
+  var now
+  if (typeof performance !== 'undefined' && performance.now) {
+    now = (performance.now() + performance.timing.navigationStart) / 1e3
+    if (getAsFloat) {
+      return now
+    }
+    // Math.round(now)
+    s = now | 0
+    return (Math.round((now - s) * 1e6) / 1e6) + ' ' + s
+  } else {
+    now = (Date.now ? Date.now() : new Date().getTime()) / 1e3
+    if (getAsFloat) {
+      return now
+    }
+    // Math.round(now)
+    s = now | 0
+    return (Math.round((now - s) * 1e3) / 1e3) + ' ' + s
+  }
+}
+
+function round(value, decimals) {
+  return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
+}
+
+
+function generate() {
+	var startTime = microtime(true); //(new Date).getTime();
+	var Bits = document.demo_form.bits.value;
+	var RSAkey = cryptico.generateRSAKey(document.demo_form.passphrase.value, Bits);
+	var lap1Time   = microtime(true); //(new Date).getTime();
+	document.demo_form.private_key.value = RSAkey.n.toString(16);
+	document.demo_form.private_key_time.value = round((lap1Time - startTime)* 10000,5) + ' \u03BCs';	
+	var PublicKeyString = cryptico.publicKeyString(RSAkey);
+	document.demo_form.public_key.value = PublicKeyString;
+	document.demo_form.public_key_shared.value = PublicKeyString;
+	var lap2Time = microtime(true);
+	document.demo_form.public_key_time.value = round((lap2Time - lap1Time)* 10000,5) + ' \u03BCs';	
+}
+
+		
+function encrypt() {
+	var startTime = microtime(true);
+    var input_text = document.demo_form.encrypt_input.value;
+	var publickeystring = document.demo_form.public_key.value;
+	var EncryptionResult = cryptico.encrypt(input_text, publickeystring);
+	var output_text = EncryptionResult.cipher;
+	var endTime = microtime(true);
+	document.demo_form.encrypt_output.value = output_text;
+	document.demo_form.from_provider.value = output_text;
+	document.demo_form.encrypt_time.value = round((endTime - startTime) * 10000,5) + ' \u03BCs';	
+	encrypt_hash();
+}
+function encrypt_hash(){
+	document.demo_form.hash_output.value='';
+	var encrypt_text = document.demo_form.encrypt_input.value
+	var startTime = microtime(true);
+	var hash_alg=document.demo_form.hash_alg.value;
+	var encrypt_hash_text="";
+	
+	switch(hash_alg) {
+		case "SHA256":
+			encrypt_hash_text = SHA256(encrypt_text);
+			break;
+		case "SHA1":
+			encrypt_hash_text = SHA1(encrypt_text);
+			break;
+		case "MD5":
+			encrypt_hash_text = MD5(encrypt_text);
+			break;
+			} 
+	var endTime = microtime(true);
+	document.demo_form.hash_output.value=encrypt_hash_text;
+	document.demo_form.hash_time.value=round((endTime - startTime) * 10000,5) + ' \u03BCs';
+}
+	
+
+function decrypt() {
+	var startTime = microtime(true);
+	var Bits = document.demo_form.bits.value;
+	var RSAkey = cryptico.generateRSAKey(document.demo_form.passphrase.value, Bits);
+	var DecryptionResult = cryptico.decrypt(document.demo_form.from_provider.value, RSAkey);
+	var decrypt_text = DecryptionResult.plaintext;
+	var endTime = microtime(true);
+    document.demo_form.ouput_message.value = decrypt_text;
+	document.demo_form.decrypt_time.value = round((endTime - startTime) * 10000,5) + ' \u03BCs';
+	decrypt_hash();
+}
+
+function decrypt_hash() {
+	document.demo_form.ret_hash_output.value='';
+	var decrypt_text = document.demo_form.ouput_message.value;
+	var startTime = microtime(true);
+	
+	switch (document.demo_form.hash_alg.value) {
+		case "SHA256":
+			var decrypt_hash_text = SHA256(decrypt_text);
+			break;
+		case "SHA1":
+			var decrypt_hash_text = SHA1(decrypt_text);
+			break;
+		case "MD5":
+			var decrypt_hash_text = MD5(decrypt_text);
+			break;
+		default:
+			var decrypt_hash_text = SHA256(decrypt_text);
+			break;
+			}
+	var endTime = microtime(true);
+	document.demo_form.ret_hash_output.value=decrypt_hash_text;
+	document.demo_form.ret_hash_time.value=round((endTime - startTime) * 10000,5) + ' \u03BCs';
+}
+
+</script>
+</head>
+
+<body onLoad=clear()>
+<table class="maintable" width=70% style="background-color:#fdf5e6; border: 5px solid black">
+<tr>
+<td style="color:#393837;text-align:center;vertical-align:center"><img src="carechain_logo.png" align="right" height="60" style="margin:0px 40px"><br>Public/Private Key Demo</td></tr>
+<tr> <td>
+<table class="subtable" style="background-color:#D5D5D5;padding:5px">
+		<form name="demo_form">
+		<tr style="color:#EDEDED;height:25px; "><th style="vertical-align:middle">Patient</th>
+		<th style="vertical-align:middle">Provider</th> 
+	</tr>
+	<tr>
+		<td width="50%" style="padding:10px">
+		<table>
+			<tr><td style="text-align:right">Enter Passphrase</td> <td><input type="text" name="passphrase"  size="45"></td></tr>
+			<tr><td style="text-align:right">Bit Size</td> <td><input type="number" name="bits" min="1" max="8192" size="5" value="512"> &nbsp; <input type="button" value="Generate keys" onClick = generate()></td></tr>
+			<tr><td style="text-align:right">Private Key
+			<br><input type="text" name="private_key_time" class="elapsed_time" readonly></td> <td><textarea name="private_key"  size="45" disabled=true  cols="45" rows="5" style=" height:60px;"></textarea></td></tr>
+			<tr><td style="text-align:right">Public Key
+			<br><input type="text" name="public_key_time" class="elapsed_time" readonly></td> <td><textarea  name="public_key"  size="45" cols="45" rows="3" style="height:60px;"></textarea></td></tr>
+			<tr><td style="text-align:right">Encrypted Message from Provider</td> <td><textarea name="from_provider"  size="45" cols="45" rows="8" style="height:120px;"></textarea></td></tr>
+			<tr><td></td> <td><input type="button" value="Decrypt" onClick = decrypt()></td></tr>
+			<tr><td style="text-align:right">Decrypted Message from Provider
+			<br><input type="text" name="decrypt_time" class="elapsed_time" readonly></td> <td><textarea name="ouput_message"  size="45" cols="45" rows="8" style="height:120px;"></textarea></td></tr>
+			<tr><td></td> <td><input type="button" value="Re-Hash" onClick = decrypt_hash()></td></tr>
+			<tr><td style="text-align:right">Hash Key
+			<br><input type="text" name="ret_hash_time" class="elapsed_time" readonly></td> <td><textarea name="ret_hash_output"  size="45" cols="45" rows="2" style="height:40px;"></textarea></td></tr>
+		</table>
+	</td>
+		<td width="50%" style="padding:10px">
+		<table>
+			<tr><td style="text-align:right">Patient's Public Key</td> <td> <textarea name="public_key_shared"  size="45" cols="45" rows="4" style="height:60px;"></textarea></td></tr>
+			<tr><td style="text-align:right">Message for Patient</td> <td><textarea name="encrypt_input" size="45" cols="45" rows="8" style="height:120px;"></textarea></td></tr>
+			<tr><td></td> <td><input type="button" value="Encrypt" onClick = encrypt()></td></tr>
+			<tr><td style="text-align:right">Encrypted Message
+			<br><input type="text" name="encrypt_time" class="elapsed_time" readonly></td> <td><textarea name="encrypt_output"  size="45" cols="45" rows="8" style="height:120px;"></textarea></td></tr>
+			<tr><td style="text-align:right">Hash Algorithm</td> <td><select name="hash_alg" id="hash_alg"><option value="SHA256" selected="selected">SHA256</option><option value="SHA1">SHA1</option>
+				<option value="MD5">MD5</option></select> &nbsp; <input type="button" value="Re-Hash" onClick = encrypt_hash()></td></tr>
+			<tr><td style="text-align:right">Hash Key
+			<br><input type="text" name="hash_time" class="elapsed_time" readonly></td> <td><textarea name="hash_output"  size="45" cols="45" rows="2" style="height:40px;"></textarea></td></tr>
+		</table>
+	</td>
+  </tr>
+</table>
+	</form> 
+</td></tr>
+</table>
+
+</body>
+</html>

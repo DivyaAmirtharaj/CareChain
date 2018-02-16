@@ -1,0 +1,21 @@
+Patient Portal Web Address:
+https://your_web_site.com/openemr/patients
+https://your_web_site.com/openemr/portal
+
+User Name: Divya18
+
+Password: divya18
+
+372630510268-b2g4dpmr83fi3ck4c3g46hdhe8m4hld4.apps.googleusercontent.com
+
+	
+	Google api
+	AIzaSyBqtJdEo_dOhTiCWHrSyGaWl8wv-
+	
+	Here is your client ID
+	403969179596-mbjsrmrlth009jbjoo1o1350ukmek2um.apps.googleusercontent.com
+	
+	Here is your client secret
+	3LEwobTlQAuIWL6v3LO6RWKz
+	
+	6@gq2%
