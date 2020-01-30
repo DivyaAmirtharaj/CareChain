@@ -109,12 +109,12 @@ $row = array();
   </td>
  </tr>
  <tr>
-  <td nowrap height="50"><b><?php xl('Current PassPhrase:', 'e'); ?></b></td>
+  <td nowrap height="50"><b><?php xl('Current Passphrase:', 'e'); ?></b></td>
   <td align="left"><input type="text" id='curr_passphrase' name='curr_passphrase' size="50" height="3" maxlength="50" value='<?php echo "" ?>'/>
   </td>
  </tr>
  <tr>
-  <td nowrap height="50"><b><?php xl('New PassPhrase:', 'e'); ?></b></td>
+  <td nowrap height="50"><b><?php xl('New Passphrase:', 'e'); ?></b></td>
   <td align="left"><input type="text" id='passphrase' name='passphrase' size="50" height="3" maxlength="50" value='<?php echo "" ?>'/>
   <font size="1">Recommended Length - Above 10 characters</font>
   </td>

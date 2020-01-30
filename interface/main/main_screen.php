@@ -130,7 +130,7 @@ if ($GLOBALS['new_tabs_layout']) {
 ?>
 <html>
 <head>
-<title>CareChain Proivder Portal
+<title>CareChain Provider Portal
 </title>
 <script type="text/javascript" src="<?php echo $GLOBALS['assets_static_relative']; ?>/jquery-min-1-9-1/index.js"></script>
 <script type="text/javascript" src="../../library/topdialog.js"></script>
